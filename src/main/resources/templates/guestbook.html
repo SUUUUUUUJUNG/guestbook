@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guestbook</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .entry { border: 1px solid #ddd; padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+<h2>방명록</h2>
+
+<form action="/guestbook/add" method="post">
+    <input type="text" name="name" placeholder="이름" required>
+    <input type="text" name="message" placeholder="메시지" required>
+    <button type="submit">등록</button>
+</form>
+
+<div th:each="entry : ${entries}" class="entry">
+    <p><strong th:text="${entry.name}"></strong>: <span th:text="${entry.message}"></span></p>
+    <p><small th:text="${entry.createdAt}"></small></p>
+    <a th:href="@{/guestbook/delete/{id}(id=${entry.id})}">삭제</a>
+</div>
+</body>
+</html>
