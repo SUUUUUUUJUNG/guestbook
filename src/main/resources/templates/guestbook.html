@@ -30,7 +30,8 @@
             justify-content: center;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="password"] {
             padding: 10px;
             font-size: 14px;
             border: 1px solid #ccc;
@@ -71,16 +72,11 @@
             color: #888;
         }
 
-        .entry a {
-            display: inline-block;
+        .entry form {
             margin-top: 8px;
-            font-size: 13px;
-            color: #e74c3c;
-            text-decoration: none;
-        }
-
-        .entry a:hover {
-            text-decoration: underline;
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
         }
 
         .pagination {
@@ -106,13 +102,18 @@
 <form action="/guestbook/add" method="post" th:object="${entry}">
     <input type="text" th:field="*{name}" placeholder="이름" required>
     <input type="text" th:field="*{message}" placeholder="메시지" required>
+    <input type="password" th:field="*{password}" placeholder="비밀번호" required>
     <button type="submit">등록</button>
 </form>
 
 <div th:each="entry : ${entries}" class="entry">
     <p><strong th:text="${entry.name}"></strong>: <span th:text="${entry.message}"></span></p>
     <p><small th:text="${entry.createdAt}"></small></p>
-    <a th:href="@{/guestbook/delete/{id}(id=${entry.id})}">삭제</a>
+
+    <form th:action="@{/guestbook/delete/{id}(id=${entry.id})}" method="post">
+        <input type="password" name="password" placeholder="비밀번호 입력" required>
+        <button type="submit">삭제</button>
+    </form>
 </div>
 
 <div class="pagination" th:if="${totalPages > 1}">
