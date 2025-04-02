@@ -5,8 +5,9 @@ import com.example.guestbook.service.GuestbookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 @RequestMapping("/guestbook")
@@ -19,9 +20,15 @@ public class GuestbookController {
     }
 
     @GetMapping
-    public String showGuestbook(Model model) {
-        List<GuestbookEntry> entries = guestbookService.getAllEntries();
-        model.addAttribute("entries", entries);
+    public String showGuestbook(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<GuestbookEntry> entryPage = guestbookService.getEntriesByPage(pageable);
+
+        model.addAttribute("entries", entryPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", entryPage.getTotalPages());
+        model.addAttribute("entry", new GuestbookEntry());
+
         return "guestbook";
     }
 
@@ -31,9 +38,12 @@ public class GuestbookController {
         return "redirect:/guestbook";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteEntry(@PathVariable Long id) {
-        guestbookService.deleteEntry(id);
+    @PostMapping("/delete/{id}")
+    public String deleteEntry(@PathVariable Long id, @RequestParam String password, Model model) {
+        boolean deleted = guestbookService.deleteEntryIfPasswordMatches(id, password);
+        if (!deleted) {
+            model.addAttribute("deleteError", "비밀번호가 일치하지 않습니다.");
+        }
         return "redirect:/guestbook";
     }
 }
