@@ -18,6 +18,7 @@ public class GuestbookEntry {
 
     private String name;
     private String message;
+    private String password; // 추가된 필드
 
     private LocalDateTime createdAt;
 
