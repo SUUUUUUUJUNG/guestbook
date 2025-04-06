@@ -46,4 +46,10 @@ public class GuestbookController {
         }
         return "redirect:/guestbook";
     }
+
+    @PostMapping("/like/{id}")
+    public String likeEntry(@PathVariable Long id) {
+        guestbookService.likeEntry(id);
+        return "redirect:/guestbook";
+    }
 }
