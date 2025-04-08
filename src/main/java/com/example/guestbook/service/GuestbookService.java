@@ -36,4 +36,11 @@ public class GuestbookService {
         }
         return false;
     }
+
+    public void likeEntry(Long id) {
+        guestbookRepository.findById(id).ifPresent(entry -> {
+            entry.increaseLikes();
+            guestbookRepository.save(entry);
+        });
+    }
 }
