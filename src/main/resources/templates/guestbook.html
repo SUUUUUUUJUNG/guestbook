@@ -94,6 +94,13 @@
             font-weight: bold;
             text-decoration: underline;
         }
+
+        .emoji-buttons button {
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -119,6 +126,18 @@
         <button type="submit">♥</button>
         <span th:text="${entry.likes}">0</span>
     </form>
+
+    <form th:action="@{/guestbook/emoji/{id}(id=${entry.id})}" method="post" class="emoji-buttons">
+        <button type="submit" name="emoji" value="😊">😊</button>
+        <button type="submit" name="emoji" value="😂">😂</button>
+        <button type="submit" name="emoji" value="😮">😮</button>
+        <button type="submit" name="emoji" value="😢">😢</button>
+        <button type="submit" name="emoji" value="😡">😡</button>
+    </form>
+
+    <p th:if="${entry.emoji != null}">
+        선택된 이모지: <span th:text="${entry.emoji}"></span>
+    </p>
 </div>
 
 <div class="pagination" th:if="${totalPages > 1}">
