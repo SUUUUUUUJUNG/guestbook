@@ -52,4 +52,10 @@ public class GuestbookController {
         guestbookService.likeEntry(id);
         return "redirect:/guestbook";
     }
+
+    @PostMapping("/emoji/{id}")
+    public String addEmoji(@PathVariable Long id, @RequestParam String emoji) {
+        guestbookService.addEmojiToEntry(id, emoji);
+        return "redirect:/guestbook";
+    }
 }
