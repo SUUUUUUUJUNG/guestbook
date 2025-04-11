@@ -25,6 +25,8 @@ public class GuestbookEntry {
 
     private int likes = 0; // 좋아요 수
 
+    private String emoji; // 선택된 이모지
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
