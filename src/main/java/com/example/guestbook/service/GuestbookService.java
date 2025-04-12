@@ -43,4 +43,11 @@ public class GuestbookService {
             guestbookRepository.save(entry);
         });
     }
+
+    public void addEmojiToEntry(Long id, String emoji) {
+        guestbookRepository.findById(id).ifPresent(entry -> {
+            entry.setEmoji(emoji);
+            guestbookRepository.save(entry);
+        });
+    }
 }
