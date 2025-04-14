@@ -2,12 +2,14 @@ package com.example.guestbook.controller;
 
 import com.example.guestbook.entity.GuestbookEntry;
 import com.example.guestbook.service.GuestbookService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/guestbook")
@@ -20,14 +22,28 @@ public class GuestbookController {
     }
 
     @GetMapping
-    public String showGuestbook(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String showGuestbook(Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(required = false) String startDate,
+                                @RequestParam(required = false) String endDate) {
+
         Pageable pageable = PageRequest.of(page, 5);
-        Page<GuestbookEntry> entryPage = guestbookService.getEntriesByPage(pageable);
+        Page<GuestbookEntry> entryPage;
+
+        if (startDate != null && endDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            entryPage = guestbookService.getEntriesByDate(start, end, pageable);
+        } else {
+            entryPage = guestbookService.getEntriesByPage(pageable);
+        }
 
         model.addAttribute("entries", entryPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", entryPage.getTotalPages());
         model.addAttribute("entry", new GuestbookEntry());
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return "guestbook";
     }
