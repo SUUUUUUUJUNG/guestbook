@@ -171,5 +171,24 @@
     </span>
 </div>
 
+<!-- 댓글 목록 -->
+<div th:if="${entry.comments}">
+    <p><strong>댓글:</strong></p>
+    <ul>
+        <li th:each="comment : ${entry.comments}">
+            <p><strong th:text="${comment.commenter}">작성자</strong>: <span th:text="${comment.content}">내용</span></p>
+            <small th:text="${comment.createdAt}"></small>
+        </li>
+    </ul>
+</div>
+
+<!-- 댓글 작성 폼 -->
+<form th:action="@{/guestbook/comment/{id}(id=${entry.id})}" method="post">
+    <input type="text" name="commenter" placeholder="작성자" required>
+    <input type="text" name="content" placeholder="댓글 내용" required>
+    <button type="submit">댓글 달기</button>
+</form>
+
+
 </body>
 </html>
