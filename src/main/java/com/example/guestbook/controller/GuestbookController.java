@@ -74,4 +74,13 @@ public class GuestbookController {
         guestbookService.addEmojiToEntry(id, emoji);
         return "redirect:/guestbook";
     }
+
+    @PostMapping("/comment/{id}")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam String commenter,
+                             @RequestParam String content) {
+        guestbookService.addCommentToEntry(id, commenter, content);
+        return "redirect:/guestbook";
+    }
+
 }
